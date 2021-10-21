@@ -35,26 +35,12 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->configureRateLimiting();
-
         $this->routes(function () {
             // API routes versions definition
             $this->apiRoutes('v1');
 
             // Laravel default web routing
             $this->webRoutes();
-        });
-    }
-
-    /**
-     * Configure the rate limiters for the application.
-     *
-     * @return void
-     */
-    protected function configureRateLimiting()
-    {
-        RateLimiter::for('api', function (Request $request) {
-            return Limit::perMinute(60)->by(optional($request->user())->id ?: $request->ip());
         });
     }
 
@@ -69,7 +55,7 @@ class RouteServiceProvider extends ServiceProvider
     protected function apiRoutes($version)
     {
         Route::prefix(sprintf('api/%s', $version))
-            ->middleware('api')
+            ->middleware(['api', 'auth.user'])
             ->namespace($this->namespace)
             ->group(base_path(sprintf('routes/api/%s.php', $version)));
     }
