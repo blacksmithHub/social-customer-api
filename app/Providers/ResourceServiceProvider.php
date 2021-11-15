@@ -4,10 +4,14 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
-use App\Helpers\Contracts\HttpRequestInterface;
-use App\Helpers\HttpRequest;
+use App\Resources\Auth\{
+    UserResource
+};
+use App\Resources\Contracts\Auth\{
+    UserResourceInterface
+};
 
-class AppServiceProvider extends ServiceProvider
+class ResourceServiceProvider extends ServiceProvider
 {
     /**
      * All of the container bindings that should be registered.
@@ -15,23 +19,21 @@ class AppServiceProvider extends ServiceProvider
      * @var array
      */
     public $bindings = [
-        HttpRequestInterface::class => HttpRequest::class
+        UserResourceInterface::class => UserResource::class,
     ];
 
     /**
-     * Register any application services.
+     * Register services.
      *
      * @return void
      */
     public function register()
     {
-        if ($this->app->isLocal()) {
-            $this->app->register(TelescopeServiceProvider::class);
-        }
+        //
     }
 
     /**
-     * Bootstrap any application services.
+     * Bootstrap services.
      *
      * @return void
      */
